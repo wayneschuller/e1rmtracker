@@ -10,6 +10,15 @@ ACTUALREPS = "actual_reps";
 ACTUALWEIGHT = "actual_weight";
 MISSED = "assigned_exercise_missed";
 
+
+function onOpen() {
+    var ui = SpreadsheetApp.getUi();
+    ui.createMenu('Strength Tracker')
+        .addItem('Process BLOC CSV data', 'process_BLOC_data')
+        .addToUi();
+}
+
+
 // Find the BLOC data and iterate row by row and collect data with top lifts for each session
 function process_BLOC_data() {
    
