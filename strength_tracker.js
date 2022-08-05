@@ -158,10 +158,10 @@ function process_BLOC_data() {
     }
 
     if (bloc_found) {
-        // FIXME: tell the user the sheet name via the ActiveSpreadsheet
+        // FIXME: tell the user the sheet name via the ActiveSpreadsheet?
         SpreadsheetApp.getUi().alert('Processed BLOC data into new active sheet.'); 
     } else {
-        SpreadsheetApp.getUi().alert('Did not find BLOC data in any sheets. (be sure to do File->Import the CSV dworkout data into a sheet of this spreadsheet)');
+        SpreadsheetApp.getUi().alert('Did not find BLOC data in any sheets. (be sure to do File->Import the BLOC workout data csv into a sheet of this spreadsheet)');
     }
 }
 
