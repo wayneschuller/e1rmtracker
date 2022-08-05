@@ -12,7 +12,7 @@ MISSED = "assigned_exercise_missed";
 
 
 function onOpen() {
-    var ui = SpreadsheetApp.getUi();
+    let ui = SpreadsheetApp.getUi();
     ui.createMenu('Strength Tracker')
         .addItem('Process BLOC CSV data', 'process_BLOC_data')
         .addToUi();
@@ -21,12 +21,14 @@ function onOpen() {
 
 // Find the BLOC data and iterate row by row and collect data with top lifts for each session
 function process_BLOC_data() {
-   
+    
     let outputValues = []; // we will store our collected data here
     let ss = SpreadsheetApp.getActiveSpreadsheet(); // FIXME: whats the cool way to check for null etc
 
     // Loop through all the sheets in the spreadsheet looking for the BLOC data 
-    var allsheets = ss.getSheets();
+    let allsheets = ss.getSheets();
+
+    let bloc_found = false;
 
     for (let s in allsheets) {
         let sheet = allsheets[s];
@@ -150,7 +152,16 @@ function process_BLOC_data() {
 
         // Output data into sheet starting in row 2 (row 1 is headings)
         outputsheet.getRange(2, 1, outputValues.length, outputValues[0].length).setValues(outputValues);
+        
+        bloc_found = true;
         }
+    }
+
+    if (bloc_found) {
+        // FIXME: tell the user the sheet name via the ActiveSpreadsheet
+        SpreadsheetApp.getUi().alert('Processed BLOC data into new active sheet.'); 
+    } else {
+        SpreadsheetApp.getUi().alert('Did not find BLOC data in any sheets. (be sure to do File->Import the CSV dworkout data into a sheet of this spreadsheet)');
     }
 }
 
