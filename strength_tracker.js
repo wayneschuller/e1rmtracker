@@ -146,7 +146,7 @@ function process_BLOC_data() {
             }
             }
   
-        // Output the collected data to the spreadsheet
+        // Output the collected data to a new sheet
         let outputsheet = ss.insertSheet(); 
         ss.appendRow(["Date","Squat","Bench","Deadlift","Press","Other"]); // Headings
 
