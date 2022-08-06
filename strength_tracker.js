@@ -111,6 +111,9 @@ function process_BLOC_data() {
                 break;
                 }
 
+            // FIXME: only process Squats for now to get contiguous data 
+            if (col != 1) continue;
+            
             // Record assigned reps and weight.
             var lifted_reps = values[row][assigned_reps_COL];
             var lifted_weight = values[row][assigned_weight_COL];
@@ -164,10 +167,10 @@ function process_BLOC_data() {
           .setTitle('Squat Progress')
           .setPosition(1, 8, 0, 0)
           .setNumHeaders(1)
+          .setCurveStyle(Charts.CurveStyle.SMOOTH)
           .build(); 
 
         outputsheet.insertChart(chart);         
-
         bloc_found = true;
         }
     }
