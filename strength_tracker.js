@@ -148,7 +148,9 @@ function process_BLOC_data() {
   
         // Output the collected data to a new sheet
         let outputsheet = ss.insertSheet(); 
+
         ss.appendRow(["Date","Squat","Bench","Deadlift","Press","Other"]); // Headings
+        outputsheet.getRange(1, 1, 1, 6).setFontWeight("bold");
 
         // Output data into sheet starting in row 2 (row 1 is headings)
         outputsheet.getRange(2, 1, outputValues.length, outputValues[0].length).setValues(outputValues);
