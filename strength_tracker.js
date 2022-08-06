@@ -155,6 +155,19 @@ function process_BLOC_data() {
         // Output data into sheet starting in row 2 (row 1 is headings)
         outputsheet.getRange(2, 1, outputValues.length, outputValues[0].length).setValues(outputValues);
         
+        // Draw a basic Squat progress chart
+        // FIXME: we need to turn on the 'plot null values' option to join the dots
+        let chartSquatRange = outputsheet.getRange('A:B');
+        let lineChartBuilder = outputsheet.newChart().asLineChart();
+        let chart = lineChartBuilder
+          .addRange(chartSquatRange)
+          .setTitle('Squat Progress')
+          .setPosition(1, 8, 0, 0)
+          .setNumHeaders(1)
+          .build(); 
+
+        outputsheet.insertChart(chart);         
+
         bloc_found = true;
         }
     }
