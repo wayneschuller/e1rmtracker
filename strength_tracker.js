@@ -113,7 +113,7 @@ function process_BLOC_data() {
 
             // FIXME: only process Squats for now to get contiguous data 
             if (col != 1) continue;
-            
+
             // Record assigned reps and weight.
             var lifted_reps = values[row][assigned_reps_COL];
             var lifted_weight = values[row][assigned_weight_COL];
@@ -165,9 +165,12 @@ function process_BLOC_data() {
         let chart = lineChartBuilder
           .addRange(chartSquatRange)
           .setTitle('Squat Progress')
+          .setXAxisTitle('Date')
+          .setYAxisTitle('Epley One Rep Max')
           .setPosition(1, 8, 0, 0)
           .setNumHeaders(1)
           .setCurveStyle(Charts.CurveStyle.SMOOTH)
+          .setColors(["red"])
           .build(); 
 
         outputsheet.insertChart(chart);         
