@@ -40,7 +40,7 @@ function process_BLOC_data() {
 
         for (let col = 0; col < values[0].length; col++) {
 
-            Logger.log("Title row. Column name is: %s", values[0][col]);
+            // Logger.log("Title row. Column name is: %s", values[0][col]);
                 
             switch (values[0][col]) {
                 case DATEFIELD:
@@ -129,9 +129,9 @@ function process_BLOC_data() {
 
             // Calculate 1RM for the list lift
             let onerepmax = estimateE1RM(lifted_reps, lifted_weight);
+                        
+            // Logger.log("onerep max is: %s", onerepmax);
             
-            Logger.log("onerep max is: %s", onerepmax.toFixed(1));
-
             // Iterate on the collected data so far to see if we have this date already
             let datefound = false;
             for (let j in outputValues) {
@@ -190,10 +190,10 @@ function process_BLOC_data() {
     }
 }
 
-// Return a 1 rep max using Epley formula
+// Return a rounded 1 rep max using Epley formula
 // For theory see: https://en.wikipedia.org/wiki/One-repetition_maximum 
 // Later on we can add different methods
 // We really only need a method that works for 1-10 reps.
 function estimateE1RM(reps, weight) {
-    return weight*(1+reps/30);
+    return Math.round(weight*(1+reps/30));
 }
