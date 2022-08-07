@@ -107,8 +107,8 @@ function process_BLOC_data() {
                     col = 3;
                     break;
                 case "Press":
-                  col = 4;
-                break;
+                    col = 4;
+                    break;
                 }
 
             // FIXME: only process Squats for now to get contiguous data 
@@ -170,14 +170,19 @@ function process_BLOC_data() {
           .setXAxisTitle('Date')
           .setYAxisTitle('Epley One Rep Max')
           .setPosition(1, 8, 0, 0)
+          .setOption('height', 600)
+          .setOption('width', 1000)
           .setNumHeaders(1)
           .setCurveStyle(Charts.CurveStyle.SMOOTH)
           .setPointStyle(Charts.PointStyle.TINY)
           .setColors(["red"])
           .setOption('pointShape', "diamond")
+          .setOption('series.0.hasAnnotations', true)
+          .setOption('series.0.dataLabel', 'value')
           .build(); 
 
-        outputsheet.insertChart(chart);         
+        outputsheet.insertChart(chart);
+
         bloc_found = true;
         }
     }
