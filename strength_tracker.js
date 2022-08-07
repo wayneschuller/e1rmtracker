@@ -32,7 +32,7 @@ function process_BLOC_data() {
 
     for (let s in allsheets) {
         let sheet = allsheets[s];
-        let values = sheet.getDataRange().getValues();
+        let values = sheet.getDataRange().getValues(); //FIXME - fails on a sheet with no values
     
         // Dynamically find where the columns are
         // We do not assume that BLOC uses consistent column order.
@@ -129,7 +129,9 @@ function process_BLOC_data() {
 
             // Calculate 1RM for the list lift
             let onerepmax = estimateE1RM(lifted_reps, lifted_weight);
-      
+            
+            Logger.log("onerep max is: %s", onerepmax.toFixed(1));
+
             // Iterate on the collected data so far to see if we have this date already
             let datefound = false;
             for (let j in outputValues) {
@@ -146,7 +148,7 @@ function process_BLOC_data() {
                 let newrow = [values[row][workout_date_COL], "", "", "", "", ""];
                 newrow.fill(onerepmax, col, col+1);
                 outputValues.push(newrow);
-            }
+              }
             }
   
         // Output the collected data to a new sheet
@@ -159,9 +161,9 @@ function process_BLOC_data() {
         outputsheet.getRange(2, 1, outputValues.length, outputValues[0].length).setValues(outputValues);
         
         // Draw a basic Squat progress chart
-        // FIXME: we need to turn on the 'plot null values' option to join the dots
         let chartSquatRange = outputsheet.getRange('A:B');
         let lineChartBuilder = outputsheet.newChart().asLineChart();
+
         let chart = lineChartBuilder
           .addRange(chartSquatRange)
           .setTitle('Squat Progress')
@@ -170,7 +172,9 @@ function process_BLOC_data() {
           .setPosition(1, 8, 0, 0)
           .setNumHeaders(1)
           .setCurveStyle(Charts.CurveStyle.SMOOTH)
+          .setPointStyle(Charts.PointStyle.TINY)
           .setColors(["red"])
+          .setOption('pointShape', "diamond")
           .build(); 
 
         outputsheet.insertChart(chart);         
