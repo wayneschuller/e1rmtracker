@@ -225,24 +225,6 @@ function process_BLOC_data() {
     ss.setActiveSheet(squatSheet);
 }
 
-// Find the sheet which contains the Squat chart object
-// If it doesn't exist create one
-function getSquatSheet() {
-    let ss = SpreadsheetApp.getActiveSpreadsheet();
-
-    // Loop through all the sheets in the spreadsheet looking for the squat graph
-    let allsheets = ss.getSheets();
-    let squat_found = false;
-
-    for (let s in allsheets) {
-        let sheet = allsheets[s];
-        if (sheet.getSheetName === "Squat Progress") return sheet;
-    }
-    if (!squat_found) {
-      return ss.insertSheet("Squat Progress");
-    }
-}
-
 // Return a rounded 1 rep max using Epley formula
 // For theory see: https://en.wikipedia.org/wiki/One-repetition_maximum 
 // Later on we can add different methods
