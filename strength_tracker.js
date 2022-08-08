@@ -1,29 +1,26 @@
 // 2022 Wayne Schuller
+//  
+// Display Google Sheets e1rm graph comparing different rep + set lift combinations over time
+//
+// https://github.com/wayneschuller/e1rmtracker
+// 
+// Released under GPL3 license. https://www.gnu.org/licenses/gpl-3.0.en.html
 
-// Globals - here are the BLOC column names
-DATEFIELD = "workout_date";
-COMPLETED = "workout_completed";
-EXERCISENAME = "exercise_name";
-ASSIGNEDREPS = "assigned_reps";
-ASSIGNEDWEIGHT = "assigned_weight";
-ACTUALREPS = "actual_reps";
-ACTUALWEIGHT = "actual_weight";
-MISSED = "assigned_exercise_missed";
 
 
 function onOpen() {
     let ui = SpreadsheetApp.getUi();
     ui.createMenu('Strength Tracker')
-        .addItem('Process BLOC CSV data', 'process_BLOC_data')
+        .addItem('Process BLOC CSV data', 'processBLOCData')
         .addToUi();
     
     // Check for Welcome sheet.
     let sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Welcome");
-    if (!sheet) create_welcome_sheet();
+    if (!sheet) createWelcomeSheet();
 }
 
 // Always have the first sheet as a welcome sheet with instructions and a place to put config URLs
-function create_welcome_sheet() {
+function createWelcomeSheet() {
     console.log("Creating welcome sheet");
     var spreadsheet = SpreadsheetApp.getActive();
     spreadsheet.getRange('A1').activate();
@@ -42,7 +39,17 @@ function create_welcome_sheet() {
 
 // Find the BLOC data and iterate row by row and collect data with top lifts for each session
 // FIXME: try to handle any errors gracefully with a dialog explanation
-function process_BLOC_data() {
+function processBLOCData() {
+
+    // Here are the BLOC column names from their CSV export as of 2022
+    const DATEFIELD = "workout_date";
+    const COMPLETED = "workout_completed";
+    const EXERCISENAME = "exercise_name";
+    const ASSIGNEDREPS = "assigned_reps";
+    const ASSIGNEDWEIGHT = "assigned_weight";
+    const ACTUALREPS = "actual_reps";
+    const ACTUALWEIGHT = "actual_weight";
+    const MISSED = "assigned_exercise_missed";
     
     let outputValues = []; // we will store our collected data here
 
