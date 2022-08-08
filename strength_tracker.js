@@ -248,5 +248,6 @@ function getSquatSheet() {
 // Later on we can add different methods
 // We really only need a method that works for 1-10 reps.
 function estimateE1RM(reps, weight) {
+    if (reps === 1) return weight; // If it was a heavy single lets not round it
     return Math.round(weight*(1+reps/30));
 }
