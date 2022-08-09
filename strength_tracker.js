@@ -131,19 +131,19 @@ function processBLOCData() {
         if (values[row][missed_COL]) continue;
 
         // Chose which column of processed data to place results
-        let col = 5; // throw all spare lifts into column 5 of the new sheet
+        let col = 9; // throw all spare lifts into column 5 of the new sheet
         switch (values[row][exercise_name_COL]) {
             case "Squat":
                 col = 1;
                 break;
             case "Bench Press":
-                col = 2;
-                break;
-            case "Deadlift":
                 col = 3;
                 break;
+            case "Deadlift":
+                col = 5;
+                break;
             case "Press":
-                col = 4;
+                col = 7;
                 break;
         }
 
@@ -170,6 +170,7 @@ function processBLOCData() {
             if (outputValues[j][0].toDateString() == values[row][workout_date_COL].toDateString()) {
                 if (onerepmax > outputValues[j][col]) {
                     outputValues[j][col] = onerepmax;
+                    if (col != 9) outputValues[j][col+1] = `Lift: ${lifted_reps}\@${lifted_weight}`; 
                 }
             datefound = true;
             }
@@ -177,8 +178,9 @@ function processBLOCData() {
 
         // If this is a new date then create a new row in our collected dataset here.
         if (!datefound) {
-            let newrow = [values[row][workout_date_COL], "", "", "", "", ""];
+            let newrow = [values[row][workout_date_COL], "", "", "", "", "", "", "", "", ""];
             newrow.fill(onerepmax, col, col+1);
+            newrow.fill(`Lift: ${lifted_reps}\@${lifted_weight}`, col+1, col+2); // Put in the top set into the notes column (used for chart tooltips)
             outputValues.push(newrow);
             bloc_found = true;  // Is this really needed?
         }
@@ -189,8 +191,8 @@ function processBLOCData() {
     if (outputsheet) ss.deleteSheet(outputsheet);
     outputsheet = ss.insertSheet().setName("Processed E1RMs");
 
-    ss.appendRow(["Date","Squat","Bench","Deadlift","Press","Other"]); // Headings
-    outputsheet.getRange(1, 1, 1, 6).setFontWeight("bold");
+    ss.appendRow(["Date","Squat", "Squat Notes", "Bench", "Bench Notes", "Deadlift", "Deadlift Notes", "Press", "Press Notes", "Other"]); // Headings
+    outputsheet.getRange(1, 1, 1, 10).setFontWeight("bold");
 
     // Output data into sheet starting in row 2 (row 1 is headings)
     outputsheet.getRange(2, 1, outputValues.length, outputValues[0].length).setValues(outputValues);
@@ -200,13 +202,13 @@ function processBLOCData() {
     let liftRange = outputsheet.getRange('B1:B1000');
     buildE1RMChart('Squat', dateRange, liftRange);
 
-    liftRange = outputsheet.getRange('C1:C1000');
+    liftRange = outputsheet.getRange('D1:D1000');
     buildE1RMChart('Bench Press', dateRange, liftRange);
     
-    liftRange = outputsheet.getRange('D1:D1000');
+    liftRange = outputsheet.getRange('F1:F1000');
     buildE1RMChart('Deadlift', dateRange, liftRange);
 
-    liftRange = outputsheet.getRange('E1:E1000');
+    liftRange = outputsheet.getRange('H1:H1000');
     buildE1RMChart('Press', dateRange, liftRange);
 
 }
@@ -222,7 +224,7 @@ function buildE1RMChart (exerciseName, dateRange, liftRange) {
     let sheet = spreadsheet.getActiveSheet();
      
     let title = exerciseName + ' Progress';
-
+    
     let chart = sheet.newChart().asLineChart()
           .addRange(dateRange)
           .addRange(liftRange)
