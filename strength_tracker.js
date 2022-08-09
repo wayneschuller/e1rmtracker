@@ -189,23 +189,44 @@ function processBLOCData() {
     if (outputsheet) ss.deleteSheet(outputsheet);
     outputsheet = ss.insertSheet().setName("Processed E1RMs");
 
-      
     ss.appendRow(["Date","Squat","Bench","Deadlift","Press","Other"]); // Headings
     outputsheet.getRange(1, 1, 1, 6).setFontWeight("bold");
 
     // Output data into sheet starting in row 2 (row 1 is headings)
     outputsheet.getRange(2, 1, outputValues.length, outputValues[0].length).setValues(outputValues);
         
-    // Draw a basic Squat progress chart
-    let chartSquatRange = outputsheet.getRange('A:B');
+    // Draw progress charts
+    let dateRange = outputsheet.getRange('A1:A1000');
+    let liftRange = outputsheet.getRange('B1:B1000');
+    buildE1RMChart('Squat', dateRange, liftRange);
 
-    // Look for existing Squat Progress sheet and delete it
-    let squatSheet = ss.getSheetByName("Squat Progress");
-    if (squatSheet) ss.deleteSheet(squatSheet);    
-      
-    let chart = outputsheet.newChart().asLineChart()
-          .addRange(chartSquatRange)
-          .setTitle('Squat Progress')
+    liftRange = outputsheet.getRange('C1:C1000');
+    buildE1RMChart('Bench Press', dateRange, liftRange);
+    
+    liftRange = outputsheet.getRange('D1:D1000');
+    buildE1RMChart('Deadlift', dateRange, liftRange);
+
+    liftRange = outputsheet.getRange('E1:E1000');
+    buildE1RMChart('Press', dateRange, liftRange);
+
+}
+
+
+// Build a new google sheets chart and put in a standalone object sheet 
+function buildE1RMChart (exerciseName, dateRange, liftRange) {
+
+    // We need a sheet to build the chart in, so take the active one.
+    // It doesn't matter which sheet because we will move the chart to a new sheet
+    // All due to a strange way that the GSheets API service works.
+    let spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    let sheet = spreadsheet.getActiveSheet();
+     
+    let title = exerciseName + ' Progress';
+
+    let chart = sheet.newChart().asLineChart()
+          .addRange(dateRange)
+          .addRange(liftRange)
+          .setTitle(title)
           .setXAxisTitle('Date')
           .setYAxisTitle('Epley One Rep Max')
           .setOption('interpolateNulls', true)
@@ -220,16 +241,16 @@ function processBLOCData() {
           .setOption('series.0.hasAnnotations', true)
           .setOption('series.0.dataLabel', 'value')
           .build(); 
+     
+    sheet.insertChart(chart);
+    
+    // Delete any existing object sheet for this lift
+    sheet = spreadsheet.getSheetByName(title);
+    if (sheet) spreadsheet.deleteSheet(sheet); 
 
-    outputsheet.insertChart(chart);
-
-    // charts in their own objectsheet look big and beautiful 
-    // I have yet to find a way to simply create an objectsheet with a chart
-    // The only way seems to be to make a chart then call moveChartToObjectSheet
-    squatSheet = ss.moveChartToObjectSheet(chart);
-    squatSheet.setName("Squat Progress");
-    squatSheet.activate();
-    ss.setActiveSheet(squatSheet);
+    // Now we move the chart from it's temp sheet to a new big home
+    let newSheet = spreadsheet.moveChartToObjectSheet(chart);
+    newSheet.setName(title);
 }
 
 // Return a rounded 1 rep max using Epley formula
